@@ -1,5 +1,16 @@
-# vi:filetype=python
-
 import ROOT as r
+import sys
 
 r.gROOT.ProcessLine('.x ~/.root_logon.C')
+
+f = []
+args = sys.argv[1:]
+for a in args:
+  if a.endswith('.C'):
+    print "Processing %s" %(a)
+    r.gROOT.ProcessLine('.x %s' %(a))
+  if a.endswith('.root'):
+    print "Loading %s as f[%s]" %(a, len(f))
+    f.append(r.TFile(a))
+
+# vi:filetype=python
