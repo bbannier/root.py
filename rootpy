@@ -1,3 +1,4 @@
+#!/bin/env ipython
 import ROOT as r
 import sys
 
