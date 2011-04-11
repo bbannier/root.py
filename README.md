@@ -9,6 +9,7 @@ processing:
 
 * ROOT files are loaded into an array `_f`.
 * CINT macros are processed.
+* Python files are processed in `ipython`'s interactive mode.
 
 Usually command line arguments will be handed to ipython first. Use `--` to
 clearly separate ipython and root.py arguments.
