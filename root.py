@@ -19,5 +19,8 @@ for a in args:
   elif a.endswith('.root'):
     print "Loading %s as _f[%s]" %(a, len(_f))
     _f.append(r.TFile(a))
+  elif a.endswith('.hbk'):
+    print "Loading %s as _f[%s]" %(a, len(_f))
+    _f.append(r.THbookFile(a))
 
 # vi:filetype=python
