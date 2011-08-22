@@ -23,17 +23,39 @@ for a in args:
     print "Loading %s as _f[%s]" %(a, len(_f))
     _f.append(r.THbookFile(a))
 
-def plot(h):
+##################################################
+try:
   from matplotlib import pyplot
   pyplot.ion()
-  try:
-    if h.GetDimension()==1:
-      x = [h.GetBinCenter(i)  for i in xrange(h.GetXaxis().GetNbins())]
-      y = [h.GetBinContent(i) for i in xrange(h.GetXaxis().GetNbins())]
-      pyplot.plot(x, y, 'h')
-      pyplot.show()
 
-  except AttributeError:
-    pyplot.plot(h)
+  def extractData(h):
+    x  = [h.GetBinCenter(i)  for i in xrange(h.GetXaxis().GetNbins())]
+    y  = [h.GetBinContent(i) for i in xrange(h.GetXaxis().GetNbins())]
+    xe = [h.GetBinWidth(i)   for i in xrange(h.GetXaxis().GetNbins())]
+    ye = [h.GetBinError(i)   for i in xrange(h.GetXaxis().GetNbins())]
+    return x, y, xe, ye
+
+  def errorbar(h):
+    try:
+      if h.GetDimension()==1:
+        x, y, xe, ye = extractData(h)
+        pyplot.errorbar(x, y, ye, xe, fmt='.')
+        pyplot.show()
+
+    except AttributeError:
+      pyplot.errorbar(h)
+
+  def plot(h):
+    try:
+      if h.GetDimension()==1:
+        x, y, _, _ = extractData(h)
+        pyplot.plot(x, y, 'h')
+        pyplot.show()
+
+    except AttributeError:
+      pyplot.plot(h)
+
+except ImportError:
+  pass
 
 # vi:filetype=python
