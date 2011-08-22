@@ -26,14 +26,26 @@ for a in args:
 ##################################################
 try:
   from matplotlib import pyplot
+  import numpy as np
   pyplot.ion()
 
   def extractData(h):
-    x  = [h.GetBinCenter(i)  for i in xrange(h.GetXaxis().GetNbins())]
-    y  = [h.GetBinContent(i) for i in xrange(h.GetXaxis().GetNbins())]
-    xe = [h.GetBinWidth(i)   for i in xrange(h.GetXaxis().GetNbins())]
-    ye = [h.GetBinError(i)   for i in xrange(h.GetXaxis().GetNbins())]
-    return x, y, xe, ye
+    dimension = h.GetDimension()
+    if dimension==1:
+      x  = [h.GetBinCenter(i)  for i in xrange(h.GetXaxis().GetNbins())]
+      y  = [h.GetBinContent(i) for i in xrange(h.GetXaxis().GetNbins())]
+      xe = [h.GetBinWidth(i)   for i in xrange(h.GetXaxis().GetNbins())]
+      ye = [h.GetBinError(i)   for i in xrange(h.GetXaxis().GetNbins())]
+      return x, y, xe, ye
+    elif dimension==2:
+      nx = h.GetXaxis().GetNbins()
+      ny = h.GetYaxis().GetNbins()
+      x  = [h.GetXaxis().GetBinCenter(i) for i in xrange(nx)]
+      y  = [h.GetYaxis().GetBinCenter(i) for i in xrange(ny)]
+      z  = [h.GetBinContent(ix, iy) for ix in xrange(nx) for iy in xrange(ny)]
+      z  = np.array(z).reshape((nx, ny))
+
+      return x, y, z
 
   def errorbar(h):
     try:
@@ -50,7 +62,10 @@ try:
       if h.GetDimension()==1:
         x, y, _, _ = extractData(h)
         pyplot.plot(x, y, 'h')
-        pyplot.show()
+      elif h.GetDimension()==2:
+        x, y, z = extractData(h)
+        pyplot.contour(y, x, z.tolist(), colors='k')
+      pyplot.show()
 
     except AttributeError:
       pyplot.plot(h)
