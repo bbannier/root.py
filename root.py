@@ -23,4 +23,17 @@ for a in args:
     print "Loading %s as _f[%s]" %(a, len(_f))
     _f.append(r.THbookFile(a))
 
+def plot(h):
+  from matplotlib import pyplot
+  pyplot.ion()
+  try:
+    if h.GetDimension()==1:
+      x = [h.GetBinCenter(i)  for i in xrange(h.GetXaxis().GetNbins())]
+      y = [h.GetBinContent(i) for i in xrange(h.GetXaxis().GetNbins())]
+      pyplot.plot(x, y, 'h')
+      pyplot.show()
+
+  except AttributeError:
+    pyplot.plot(h)
+
 # vi:filetype=python
