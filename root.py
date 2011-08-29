@@ -46,6 +46,7 @@ try:
         for f in h.GetListOfFunctions():
           fx, fy, _, _ = extractData(f)
           pyplot.plot(fx, fy, '-')
+        set_axis_labels(h)
         pyplot.show()
 
     except AttributeError:
@@ -62,6 +63,7 @@ try:
       elif h.GetDimension()==2:
         x, y, z = extractData(h)
         pyplot.contour(y, x, z.tolist(), colors='k')
+      set_axis_labels(h)
       pyplot.show()
 
     except AttributeError:
