@@ -21,17 +21,17 @@ try:
         if data.InheritsFrom('TH1'):
             dimension = data.GetDimension()
             nx = data.GetXaxis().GetNbins()
-            x  = [data.GetBinCenter(i)  for i in xrange(nx)]
+            x = [data.GetBinCenter(i) for i in xrange(nx)]
             if dimension == 1:
-                y  = [data.GetBinContent(i) for i in xrange(nx)]
-                xe = [data.GetBinWidth(i)   for i in xrange(nx)]
-                ye = [data.GetBinError(i)   for i in xrange(nx)]
+                y = [data.GetBinContent(i) for i in xrange(nx)]
+                xe = [data.GetBinWidth(i) for i in xrange(nx)]
+                ye = [data.GetBinError(i) for i in xrange(nx)]
                 return x, y, xe, ye
             elif dimension == 2:
                 ny = data.GetYaxis().GetNbins()
-                y  = [data.GetYaxis().GetBinCenter(i) for i in xrange(ny)]
-                z  = [data.GetBinContent(ix, iy) for ix in xrange(nx) for iy in xrange(ny)]
-                z  = np.array(z).reshape((nx, ny))
+                y = [data.GetYaxis().GetBinCenter(i) for i in xrange(ny)]
+                z = [data.GetBinContent(ix, iy) for ix in xrange(nx) for iy in xrange(ny)]
+                z = np.array(z).reshape((nx, ny))
                 return x, y, z
         elif data.InheritsFrom('TF1'):
             x = np.linspace(data.GetXaxis().GetXmin(), data.GetXaxis().GetXmax(), 100)
