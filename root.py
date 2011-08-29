@@ -9,26 +9,34 @@ try:
   pyplot.ion()
 
   def extractData(h):
-    dimension = h.GetDimension()
-    nx = h.GetXaxis().GetNbins()
-    x  = [h.GetBinCenter(i)  for i in xrange(nx)]
-    if dimension==1:
-      y  = [h.GetBinContent(i) for i in xrange(nx)]
-      xe = [h.GetBinWidth(i)   for i in xrange(nx)]
-      ye = [h.GetBinError(i)   for i in xrange(nx)]
-      return x, y, xe, ye
-    elif dimension==2:
-      ny = h.GetYaxis().GetNbins()
-      y  = [h.GetYaxis().GetBinCenter(i) for i in xrange(ny)]
-      z  = [h.GetBinContent(ix, iy) for ix in xrange(nx) for iy in xrange(ny)]
-      z  = np.array(z).reshape((nx, ny))
-      return x, y, z
+    if h.InheritsFrom('TH1'):
+      dimension = h.GetDimension()
+      nx = h.GetXaxis().GetNbins()
+      x  = [h.GetBinCenter(i)  for i in xrange(nx)]
+      if dimension==1:
+        y  = [h.GetBinContent(i) for i in xrange(nx)]
+        xe = [h.GetBinWidth(i)   for i in xrange(nx)]
+        ye = [h.GetBinError(i)   for i in xrange(nx)]
+        return x, y, xe, ye
+      elif dimension==2:
+        ny = h.GetYaxis().GetNbins()
+        y  = [h.GetYaxis().GetBinCenter(i) for i in xrange(ny)]
+        z  = [h.GetBinContent(ix, iy) for ix in xrange(nx) for iy in xrange(ny)]
+        z  = np.array(z).reshape((nx, ny))
+        return x, y, z
+    elif h.InheritsFrom('TF1'):
+      x = np.linspace(h.GetXaxis().GetXmin(), h.GetXaxis().GetXmax(), 100)
+      y = [h.Eval(X) for X in x]
+      return x, y, None, None
 
   def errorbar(h):
     try:
       if h.GetDimension()==1:
         x, y, xe, ye = extractData(h)
         pyplot.errorbar(x, y, ye, xe, fmt='.')
+        for f in h.GetListOfFunctions():
+          fx, fy, _, _ = extractData(f)
+          pyplot.plot(fx, fy, '-')
         pyplot.show()
 
     except AttributeError:
@@ -39,6 +47,9 @@ try:
       if h.GetDimension()==1:
         x, y, _, _ = extractData(h)
         pyplot.plot(x, y, 'h')
+        for f in h.GetListOfFunctions():
+          fx, fy, _, _ = extractData(f)
+          pyplot.plot(fx, fy, '-')
       elif h.GetDimension()==2:
         x, y, z = extractData(h)
         pyplot.contour(y, x, z.tolist(), colors='k')
