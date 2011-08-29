@@ -97,4 +97,4 @@ for a in args:
         print "Loading %s as _f[%s]" % (a, len(_f))
         _f.append(r.THbookFile(a))
 
-# vi:filetype=python tabstop=4
+# vi:filetype=python tabstop=4 foldmethod=indent
