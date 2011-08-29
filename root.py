@@ -47,6 +47,7 @@ try:
           fx, fy, _, _ = extractData(f)
           pyplot.plot(fx, fy, '-')
         set_axis_labels(h)
+        set_axis_ranges(h)
         pyplot.show()
 
     except AttributeError:
@@ -64,6 +65,7 @@ try:
         x, y, z = extractData(h)
         pyplot.contour(y, x, z.tolist(), colors='k')
       set_axis_labels(h)
+      set_axis_ranges(h)
       pyplot.show()
 
     except AttributeError:
