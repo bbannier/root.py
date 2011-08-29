@@ -14,7 +14,7 @@ try:
 
     def set_axis_ranges(h):
         pyplot.xlim(h.GetXaxis().GetXmin(), h.GetXaxis().GetXmax())
-        if h.GetDimension()>1:
+        if h.GetDimension() > 1:
             pyplot.ylim(h.GetYaxis().GetXmin(), h.GetYaxis().GetXmax())
 
     def extractData(data):
@@ -22,12 +22,12 @@ try:
             dimension = data.GetDimension()
             nx = data.GetXaxis().GetNbins()
             x  = [data.GetBinCenter(i)  for i in xrange(nx)]
-            if dimension==1:
+            if dimension == 1:
                 y  = [data.GetBinContent(i) for i in xrange(nx)]
                 xe = [data.GetBinWidth(i)   for i in xrange(nx)]
                 ye = [data.GetBinError(i)   for i in xrange(nx)]
                 return x, y, xe, ye
-            elif dimension==2:
+            elif dimension == 2:
                 ny = data.GetYaxis().GetNbins()
                 y  = [data.GetYaxis().GetBinCenter(i) for i in xrange(ny)]
                 z  = [data.GetBinContent(ix, iy) for ix in xrange(nx) for iy in xrange(ny)]
@@ -40,7 +40,7 @@ try:
 
     def errorbar(h):
         try:
-            if h.GetDimension()==1:
+            if h.GetDimension() == 1:
                 x, y, xe, ye = extractData(h)
                 pyplot.errorbar(x, y, ye, xe, fmt='.')
                 for f in h.GetListOfFunctions():
@@ -55,13 +55,13 @@ try:
 
     def plot(h):
         try:
-            if h.GetDimension()==1:
+            if h.GetDimension() == 1:
                 x, y, _, _ = extractData(h)
                 pyplot.plot(x, y, 'h')
                 for f in h.GetListOfFunctions():
                     fx, fy, _, _ = extractData(f)
                     pyplot.plot(fx, fy, '-')
-            elif h.GetDimension()==2:
+            elif h.GetDimension() == 2:
                 x, y, z = extractData(h)
                 pyplot.contour(y, x, z.tolist(), colors='k')
             set_axis_labels(h)
@@ -83,16 +83,16 @@ _f = []
 args = sys.argv[1:]
 for a in args:
     if a.endswith('.C'):
-        print "Processing %s" %(a)
-        r.gROOT.ProcessLine('.x %s' %(a))
+        print "Processing %s" % (a)
+        r.gROOT.ProcessLine('.x %s' % (a))
     elif a.endswith('.py'):
-        print "Processing %s" %(a)
-        _ip.magic('run -i %s' %(a))
+        print "Processing %s" % (a)
+        _ip.magic('run -i %s' % (a))
     elif a.endswith('.root'):
-        print "Loading %s as _f[%s]" %(a, len(_f))
+        print "Loading %s as _f[%s]" % (a, len(_f))
         _f.append(r.TFile(a))
     elif a.endswith('.hbk'):
-        print "Loading %s as _f[%s]" %(a, len(_f))
+        print "Loading %s as _f[%s]" % (a, len(_f))
         _f.append(r.THbookFile(a))
 
 # vi:filetype=python tabstop=4
