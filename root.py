@@ -78,6 +78,12 @@ except ImportError:
 
 ##################################################
 
+def set_color(hist, color):
+  hist.SetMarkerColor(color)
+  hist.SetLineColor(color)
+
+##################################################
+
 _ip = IPython.ipapi.get()
 
 r.gROOT.ProcessLine('.x ~/.root_logon.C')
